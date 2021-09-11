@@ -24,7 +24,7 @@ function onSearch(e) {
 function checkThen(arr) {
     if (arr.length > 10) {
         error({
-            text: 'Введите более валидный текст',
+            text: 'Введите страну правильно',
             maxTextHeight: null,
             delay: 1000,
         });
