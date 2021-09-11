@@ -1,21 +1,36 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <title>Country</title>
+    <title>Countries</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/modern-normalize/1.0.0/modern-normalize.min.css"
+      integrity="sha512-ISS7cAi1PEhQ8jnbJpJZMd29NlhNj4AWYyLOSp2CE/CsHxTCu+r+t0D2yoJudVrd0/8fTVPUVDzY5Tvli75u/g=="
+      crossorigin="anonymous"
+    />
+    <link href="../node_modules/@pnotify/core/dist/PNotify.css" rel="stylesheet" type="text/css" />
   </head>
-<body>
-  <div class="container">
-    <div class="input-section">
-  <input type="text" class="js__input" name="query" placeholder="Введите название страны">
-  <button type="button" data-clear-list>Clear</button>
-    </div>
-  <ul class="country-list"></ul>
-  <div class="js-card__container"></div>
-  </div>
+  <body>
+    <section class="section"> 
+      <h1 class="title">Введите название страны</h1>
+      <div class="box">
+        <form id="form">
+          <input type="text" class="input" name="query">
+        </form>
+        <button class="btn-clear">Очистить</button>
+      </div>
 
-<script src="./index.js"></script>
+      <div class="box-countries">
+        <ul class="list list-countries">
+        </ul>
+      </div>
+      <div class="container">
+      </div>
+    </section>
+    
+    <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.15/lodash.min.js"></script>
+    <script src="./index.js"></script>
   </body>
 </html>

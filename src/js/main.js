@@ -1,51 +1,61 @@
-import getRefs from './components/getRefs';
-import CountryApiService from './components/fetchCountries';
-import myError from './components/Pnotify';
-import countryCardTmp from '../templates/country.hbs';
-import countryList from '../templates/countryList.hbs';
-import debounce from 'lodash.debounce';
+import '@pnotify/core/dist/BrightTheme.css';
+import templates from '../templates/containerTpl.hbs';
+import { error } from '../../node_modules/@pnotify/core/dist/PNotify.js';
+import refs from './partials/refs';
+import fetchCountries from './partials/fetchCountries';
+import createMarkupList from './partials/markup';
+let debounce = require('lodash.debounce');
 
-const refs = getRefs();
-const fetchCountryByName = new CountryApiService();
+refs.form.addEventListener('input', debounce(onSearch, 500));
+refs.btn.addEventListener('click', onClickClear);
 
-refs.inputRef.addEventListener('input', debounce(onSearch, 500));
-refs.clear.addEventListener('click', clearList);
 
-function onSearch() {
-  const inputText = refs.inputRef.value;
-  fetchCountryByName
-    .fetchCountries(inputText)
-    .then(propertyQuery)
-    .catch(myError);
+function onSearch(e) {
+    e.preventDefault();
+    const search = refs.input.value;
+
+    fetchCountries(search)
+    .then(checkThen)
+    .catch(() => {
+        checkCatch(search);
+    });
 }
 
-function renderCountryList(country) {
-  const markup = countryList(country);
-  refs.renderCountryList.innerHTML = markup;
+function checkThen(arr) {
+    if (arr.length > 10) {
+        error({
+            text: 'Введите более валидный текст',
+            maxTextHeight: null,
+            delay: 1000,
+        });
+    } else if (arr.length > 2 && arr.length <= 10) {
+        appendMarkupList(arr);
+        refs.list.classList.add('is-open');
+    } else if (arr.length === 1) {
+        refs.list.innerHTML = '';
+        refs.list.classList.remove('is-open');
+        appendMarkupContainer(arr)
+    }
 }
 
-function renderCountryCard(country) {
-  const markup = countryCardTmp(country);
-  refs.cardContainer.innerHTML = markup;
-}
-function propertyQuery(r) {
-  if (r === false) {
-    return;
-  }
-  if (r.length > 10) {
-    myError();
-  }
-  if (r.length <= 10 && r.length >= 2) {
-    renderCountryList(r);
-  }
-  if (r.length === 1) {
-    renderCountryCard(r);
-    renderCountryList('');
-  }
+function checkCatch(search) {
+    if (search === '') {
+        refs.list.classList.remove('is-open');
+        refs.list.innerHTML = '';
+    }
 }
 
-function clearList() {
-  refs.renderCountryList.innerHTML = '';
-  refs.cardContainer.innerHTML = '';
-  refs.inputRef.value = '';
+function appendMarkupList(arr) {
+    refs.list.innerHTML = createMarkupList(arr).join('');
+}
+
+function appendMarkupContainer(arr) {
+    refs.container.innerHTML = templates(arr);
+}
+
+function onClickClear() {
+    refs.container.innerHTML = '';
+    refs.input.value = '';
+    refs.list.innerHTML = '';
+    refs.list.classList.remove('is-open');
 }
